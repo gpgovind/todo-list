@@ -11,7 +11,12 @@ class TaskShowEvent extends TaskEvent {}
 
 class TaskErrorEvent extends TaskEvent {}
 
+class TaskEditEvent extends TaskEvent {
+  NotesModel noteList;
+  TaskEditEvent(this.noteList);
+}
+
 class TaskDeleteEvent extends TaskEvent {
   dynamic key;
-  TaskDeleteEvent( this.key, );
+  TaskDeleteEvent(this.key,);
 }

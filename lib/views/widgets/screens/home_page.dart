@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc_with_todo/bloc/addtaskbloc/add_state.dart';
 import 'package:bloc_with_todo/util/color.dart';
+import 'package:bloc_with_todo/views/widgets/screens/edite_screen.dart';
 import 'package:bloc_with_todo/views/widgets/screens/textfiled_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +25,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController tittleController = TextEditingController();
 
+  void updateTaskList() {
+    BlocProvider.of<TaskAddBloc>(context).add(TaskShowEvent());
+  }
+
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TaskAddBloc>(context).add(TaskShowEvent());
+    updateTaskList();
   }
 
   @override
@@ -77,8 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Padding(
                   padding:
                       const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-                  child: BlocConsumer<TaskAddBloc, TaskState>(
-                    listener: (context, state) => TaskShowEvent(),
+                  child: BlocBuilder<TaskAddBloc, TaskState>(
                     builder: (context, state) {
                       if (state is TaskShowState && state.noteList.isNotEmpty) {
                         log(state.noteList.length.toString());
@@ -89,6 +93,25 @@ class _MyHomePageState extends State<MyHomePage> {
                             children: List.generate(
                                 state.noteList.length,
                                 (index) => CupertinoListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BlocProvider(
+                                                    create: (context) =>
+                                                        TaskAddBloc(),
+                                                    child: EditScreen(
+                                                      content: state
+                                                          .noteList[index].task,
+                                                      title: state
+                                                          .noteList[index]
+                                                          .title,
+                                                      id: state
+                                                          .noteList[index].key,
+                                                    ),
+                                                  )));
+                                    },
                                     trailing: IconButton(
                                         color: Colors.red,
                                         onPressed: () {

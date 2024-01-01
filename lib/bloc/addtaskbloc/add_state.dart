@@ -20,3 +20,6 @@ class TaskShowState extends TaskState {
 }
 
 class TaskDeleteState extends TaskState {}
+
+class TaskEditState extends TaskState {}
+

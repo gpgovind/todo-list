@@ -2,24 +2,36 @@ import 'package:bloc_with_todo/util/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
 import '../../../bloc/addtaskbloc/add_bloc.dart';
 import '../../../bloc/addtaskbloc/add_event.dart';
 import '../../../data/data_model.dart';
 import '../custom_textfiled.dart';
 
-class TextFiledScreen extends StatefulWidget {
-  const TextFiledScreen({
-    super.key,
-  });
+class EditScreen extends StatefulWidget {
+  final String title;
+  final String content;
+  final dynamic id;
+
+  const EditScreen(
+      {super.key,
+      required this.content,
+      required this.title,
+      required this.id});
 
   @override
-  State<TextFiledScreen> createState() => _TextFiledScreenState();
+  State<EditScreen> createState() => _EditScreenState();
 }
 
-class _TextFiledScreenState extends State<TextFiledScreen> {
+class _EditScreenState extends State<EditScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
+
+  @override
+  void initState() {
+    titleController.text = widget.title;
+    contentController.text = widget.content;
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -35,13 +47,14 @@ class _TextFiledScreenState extends State<TextFiledScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           EasyLoading.show();
-          Future.delayed(const Duration(seconds: 1));
-           BlocProvider.of<TaskAddBloc>(context).add(TaskAddEvent(NotesModel(
-                id: 2,
+          Future.delayed(const Duration(seconds: 1)).then((value) {
+            BlocProvider.of<TaskAddBloc>(context).add(TaskEditEvent(NotesModel(
+                id: widget.id,
                 task: contentController.text,
                 title: titleController.text)));
             BlocProvider.of<TaskAddBloc>(context).add(TaskShowEvent());
             Navigator.pop(context);
+          });
         },
         backgroundColor: Colors.grey.shade300,
         child: const Icon(Icons.save),

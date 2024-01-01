@@ -11,4 +11,6 @@ class NotesModel extends HiveObject {
   int id;
 
   NotesModel({required this.id, required this.task, required this.title});
+
+  static Box<NotesModel> getdata() => Hive.box<NotesModel>('TodoBox');
 }
